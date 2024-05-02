@@ -10,6 +10,7 @@ public class Server extends Thread
     private ServerSocket server = null;
     //private int port;
     private DataInputStream in = null;
+    int[][] board = new int[6][7];
 
 
     public static void main(String[] args)
@@ -49,4 +50,17 @@ public class Server extends Thread
        
     }
 
+    public void placePiece(int col)
+    {
+        int height = 6;
+        int width = 7;
+        for(int i = board[height-1][width]; i >= 0;i--)
+        {
+            if(board[i][col] == 0)
+            {
+                //place piece
+                //switch player
+            }
+        }
+    }
 }
