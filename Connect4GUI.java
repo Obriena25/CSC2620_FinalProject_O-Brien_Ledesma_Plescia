@@ -1,14 +1,20 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 public class Connect4GUI extends JFrame {
 
@@ -23,7 +29,7 @@ public class Connect4GUI extends JFrame {
     private boolean gameOver = false;
 
     public Connect4GUI() {
-        setTitle();
+        setTitle("Connect 4");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
@@ -48,13 +54,74 @@ public class Connect4GUI extends JFrame {
         statusLabel.setFont(new Font("Arial", Font.BOLD, 10));
         statusLabel.setBorder(BorderFactory.createEmptyBorder(10,0,10,0));
 
+        Container mainPanel;
         mainPanel.add(boardPanel, BorderLayout.CENTER);
         mainPanel.add(statusLabel, BorderLayout.NORTH);
 
         getContentPane().add(mainPanel);
 
-
-
-
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
+    private class BoardButtonListener implements ActionListener {
+        private int col;
+
+        public BoardButtonListener(int row, int col) {
+            this.col = col;
+        }
+        public void actionPerformed(ActionEvent e) {
+            if(gameOver) return;
+
+            int row = getLowestEmptyRow(col);
+            if(row != -1) {
+                if(isPlayer1Turn) {
+                    boardButtons[row][col].setBackground(Color.RED);
+                    statusLabel.setText("Player 2's Turn");
+                } else {
+                    boardButtons[row][col].setBackground(Color.YELLOW);
+                    statusLabel.setText("Player 1's Turn");
+                }
+                if (checkWinCondidtion(row, col)) {
+                    String winner = isPlayer1Turn ? "Player 1" : "Player 2";
+                    JOptionPane.showMessageDialog(Connect4GUI.this, "Congratulations! " + winner + "wins!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+                    gameOver = true;
+                }
+                isPlayer1Turn = !isPlayer1Turn;
+            }
+        }
+        private int getLowestEmptyRow(int col) {
+            for (int row = ROWS - 1; row >= 0; row--) {
+                if (boardButtons[row][col].getBackground() == Color.WHITE) {
+                    return row;
+                }
+            }
+            return -1;
+        }
+        private boolean checkWinCondidtion(int row, int col) {
+            Color currentColor = boardButtons[row][col].getBackground();
+            if (countConnected(row, col, 0, 1, currentColor) + countConnected(row, col, 0, -1, currentColor) + 1  >= CONNECT_COUNT) return true;
+
+            if (countConnected(row, col, 1, 0, currentColor) + countConnected(row, col, 0, -1, currentColor) + 1 >= CONNECT_COUNT) return true;
+
+            if (countConnected(row, col, -1, 1, currentColor) + countConnected(row, col, 1, -1, currentColor) + 1 >= CONNECT_COUNT) return true;
+
+            return countConnected(row, col, 1, 1, currentColor) + countConnected(roe, col, -1, -1, currentColor) + 1 >= CONNECT_COUNT;
+        }
+        private int countConnected(int row, int col, int rowDelta, int colDelta, Color color) {
+            int count = 0;
+            int r = row + rowDelta;
+            int c = col + colDelta;
+            while (r >= 0 && r < ROWS && c >= 0 && c < COLUMNS && boardButtons[r][c].getBackground() == color) {
+                count++;
+                r += rowDelta;
+                c += colDelta;
+            }
+            return count;
+        }
+    }
+    public static void main(String[] args) {
+            SwingUtilities.invokeLater(() -> new Connect4GUI());
+        }
+
 }
