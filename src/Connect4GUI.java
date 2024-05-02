@@ -1,6 +1,5 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -9,7 +8,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -28,16 +26,18 @@ public class Connect4GUI extends JFrame {
 
     private boolean isPlayer1Turn = true;
     private boolean gameOver = false;
-    private Container boardPanel;
 
     public Connect4GUI() {
         setTitle("Connect 4");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
-        JPanel mainJPanel = new JPanel();
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+
+        JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new GridLayout(ROWS, COLUMNS));
-        ((JComponent) boardPanel).setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        boardPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         boardButtons = new JButton[ROWS][COLUMNS];
 
@@ -56,7 +56,6 @@ public class Connect4GUI extends JFrame {
         statusLabel.setFont(new Font("Arial", Font.BOLD, 10));
         statusLabel.setBorder(BorderFactory.createEmptyBorder(10,0,10,0));
 
-        Container mainPanel;
         mainPanel.add(boardPanel, BorderLayout.CENTER);
         mainPanel.add(statusLabel, BorderLayout.NORTH);
 
@@ -108,7 +107,7 @@ public class Connect4GUI extends JFrame {
 
             if (countConnected(row, col, -1, 1, currentColor) + countConnected(row, col, 1, -1, currentColor) + 1 >= CONNECT_COUNT) return true;
 
-            return countConnected(row, col, 1, 1, currentColor) + countConnected(roe, col, -1, -1, currentColor) + 1 >= CONNECT_COUNT;
+            return countConnected(row, col, 1, 1, currentColor) + countConnected(row, col, -1, -1, currentColor) + 1 >= CONNECT_COUNT;
         }
         private int countConnected(int row, int col, int rowDelta, int colDelta, Color color) {
             int count = 0;
