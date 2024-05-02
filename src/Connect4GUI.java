@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -27,6 +28,7 @@ public class Connect4GUI extends JFrame {
 
     private boolean isPlayer1Turn = true;
     private boolean gameOver = false;
+    private Container boardPanel;
 
     public Connect4GUI() {
         setTitle("Connect 4");
@@ -35,7 +37,7 @@ public class Connect4GUI extends JFrame {
 
         JPanel mainJPanel = new JPanel();
         boardPanel.setLayout(new GridLayout(ROWS, COLUMNS));
-        boardPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        ((JComponent) boardPanel).setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         boardButtons = new JButton[ROWS][COLUMNS];
 

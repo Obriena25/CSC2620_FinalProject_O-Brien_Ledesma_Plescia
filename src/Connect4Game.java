@@ -2,13 +2,14 @@ public class Connect4Game {
     private final int ROWS = 6;
     private final int COLS = 7; 
     private char[][] board;
-    private cahr currentPlayerPlace;
+    private char currentPlayerPlace;
 
     public Connect4Game() {
         board = new char[ROWS][COLS];
         currentPlayerPlace = 'X';
         reset();
     }
+
 
     public void rest() {
         for (int i = 0; i < ROWS; i++) {
@@ -76,7 +77,7 @@ public class Connect4Game {
         public boolean isBoardFull() {
             for (int i = 0; i < ROWS; i++) {
                 for (int j = 0; j < COLS; j++) {
-                    if(board[i][j] = ' ') {
+                    if(board[i][j] == ' ') {
                         return false;
                     }
                 }
@@ -94,9 +95,15 @@ public class Connect4Game {
         return board[row][col];
     }
     public int getLastMoveRow() {
+        throw new UnsupportedOperationException("Unimplemented method 'getLastMoveRow'");
+
     }
     public char[][] getBoard() {
+        throw new UnsupportedOperationException("Unimplemented method 'getBoard'");
+    }
 
+    private void reset() {
+        throw new UnsupportedOperationException("Unimplemented method 'reset'");
     }
     }
     
