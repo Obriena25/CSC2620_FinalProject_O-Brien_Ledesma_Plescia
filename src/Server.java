@@ -58,12 +58,14 @@ public class Server extends Thread
     {
         int height = 6;
         int width = 7;
-        for(int i = board[height-1][width]; i >= 0; i--)
+        for(int i = board.length - 1; i >= 0; i--) //first condition is not right?????*************
+                                                            //only want to be decreasing the height, not the width
         {
             if(board[i][col] == 0)
             {
                 //place piece
-                //board[i][col] = 
+                //board[i][col] = piece.currentPlayer
+
                 //switch player
             }
         }
@@ -71,16 +73,31 @@ public class Server extends Thread
 
     public void checkHorizonalWin()
     {
-
+        //for loop iterating through rows
+            //for loop iterating through columns 
+                //if current x spot = 1 and x+1 = 1 and x+2 = 1 and x+3 = 1
+                    //player one wins
+                //if current x spot = 2 and x+1 = 2 and x+2 = 2 and x+3 = 2
+                    //player two wins
     }
 
     public void checkVerticalWin()
     {
-
+        //for loop iterating through rows
+            //for loop iterating through columns 
+                //if current y spot = 1 and y+1 = 1 and y+2 = 1 and y+3 = 1
+                    //player one wins
+                //if current y spot = 2 and y+1 = 2 and y+2 = 2 and y+3 = 2
+                    //player two wins
     }
 
     public void checkDiagonalWin()
     {
-
+        //for loop iterating through rows
+            //for loop iterating through columns 
+                //if (current x and y = 1) and (x+1 and y+1 = 1) and (x+2 and y+2 = 1) and (x+3 and y+3 = 1)
+                    //player one wins
+                //if (current x and y = 2) and (x+1 and y+1 = 2 and (x+2 and y+2 = 2) and (x+3 and y+3 = 2)
+                    //player two wins
     }
 }
