@@ -97,7 +97,19 @@ public class Server extends Thread
             //for loop iterating through columns 
                 //if (current x and y = 1) and (x+1 and y+1 = 1) and (x+2 and y+2 = 1) and (x+3 and y+3 = 1)
                     //player one wins
-                //if (current x and y = 2) and (x+1 and y+1 = 2 and (x+2 and y+2 = 2) and (x+3 and y+3 = 2)
+                //if (current x and y = 2) and (x+1 and y+1 = 2) and (x+2 and y+2 = 2) and (x+3 and y+3 = 2)
+                    //player two wins
+                //if (current x and y = 1) and (x-1 and y+1 = 1) and (x-2 and y+2 = 1) and (x-3 and y+3 = 1)
+                    //player one wins
+                //if (current x and y = 2) and (x-1 and y+1 = 2) and (x-2 and y+2 = 2) and (x-3 and y+3 = 2)
+                    //player two wins
+                //if (current x and y = 1) and (x+1 and y-1 = 1) and (x+2 and y-2 = 1) and (x+3 and y-3 = 1)
+                    //player one wins
+                //if (current x and y = 2) and (x+1 and y-1 = 2) and (x+2 and y-2 = 2) and (x+3 and y-3 = 2)
+                    //player two wins
+                //if (current x and y = 1) and (x-1 and y-1 = 1) and (x-2 and y-2 = 1) and (x-3 and y-3 = 1)
+                    //player one wins
+                //if (current x and y = 2) and (x-1 and y-1 = 2) and (x-2 and y-2 = 2) and (x-3 and y-3 = 2)
                     //player two wins
     }
 }
