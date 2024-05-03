@@ -3,8 +3,12 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+//the server provides functionality for the board
 
-public class Server extends Thread
+//the server recieves the move made by the client(player) and check for the first empty spot in the chosen cloumn
+//also checks if the player that just made a move, has won
+//sends the updated board to the client
+public class Server extends Thread 
 {
     private Socket connectionToPlayer = null;
     private ServerSocket server = null;
@@ -54,13 +58,29 @@ public class Server extends Thread
     {
         int height = 6;
         int width = 7;
-        for(int i = board[height-1][width]; i >= 0;i--)
+        for(int i = board[height-1][width]; i >= 0; i--)
         {
             if(board[i][col] == 0)
             {
                 //place piece
+                //board[i][col] = 
                 //switch player
             }
         }
+    }
+
+    public void checkHorizonalWin()
+    {
+
+    }
+
+    public void checkVerticalWin()
+    {
+
+    }
+
+    public void checkDiagonalWin()
+    {
+
     }
 }
