@@ -8,7 +8,7 @@ import java.net.Socket;
 //the server recieves the move made by the client(player) and check for the first empty spot in the chosen cloumn
 //also checks if the player that just made a move, has won
 //sends the updated board to the client
-public class Server extends Thread 
+public class Server extends Thread
 {
     private Socket connectionToPlayer = null;
     private ServerSocket server = null;
