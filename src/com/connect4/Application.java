@@ -22,7 +22,7 @@ public class Application {
                     Thread connectionThread = new Thread(() -> {
                         try {
                             socket.accept();
-                            gui.setStatus("Player 2 connected");
+                            gui.setStatus("Player 1 ready");
                         } catch (IOException e) {
                             JOptionPane.showMessageDialog(gui, "Failed to established connection with player2, please try again later", "Error", JOptionPane.ERROR_MESSAGE);
                         } finally {
@@ -31,8 +31,8 @@ public class Application {
                     });
                     connectionThread.start();
                 } else {
-                    gui.setStatus("Connected to player 1");
-                    gui.waitingForPlayer(-1, -1, 1);
+                    gui.setStatus("Player 2 is ready");
+                    gui.waitingForPlayer(-1, -1, 2);
                 }
                 gui.drawBoard();
             } catch (IOException e) {
