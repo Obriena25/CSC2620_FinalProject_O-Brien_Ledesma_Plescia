@@ -33,9 +33,9 @@ public class Application {
                 } else {
                     gui.setStatus("Connected to player 1");
                 }
-
+                gui.drawBoard();
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "Failed to start as  player1, please try again later", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Failed to start as player1, please try again later", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
