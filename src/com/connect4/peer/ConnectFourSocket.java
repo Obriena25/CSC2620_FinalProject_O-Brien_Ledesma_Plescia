@@ -1,8 +1,8 @@
 package com.connect4.peer;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import com.connect4.models.Board;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -50,5 +50,24 @@ public class ConnectFourSocket {
         if (serverSocket != null) {
             serverSocket.close();
         }
+    }
+
+    public void sendMessage(int row, int col, int player) throws IOException {
+        var outputStream = this.peerSocket.getOutputStream();
+        var objectOutputStream = new ObjectOutputStream(outputStream);
+        objectOutputStream.writeInt(row);
+        objectOutputStream.writeInt(col);
+        objectOutputStream.writeInt(player);
+        objectOutputStream.flush();
+    }
+
+    public void receiveMessage(Board boar) throws IOException {
+        var inputStream = this.peerSocket.getInputStream();
+        var objectInputStream = new ObjectInputStream(inputStream);
+        var row = objectInputStream.readInt();
+        var col = objectInputStream.readInt();
+        var player = objectInputStream.readInt();
+        boar.setValue(row, col, player);
+
     }
 }

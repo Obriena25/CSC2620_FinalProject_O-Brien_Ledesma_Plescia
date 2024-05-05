@@ -69,11 +69,12 @@ public class Connect4Gui extends JFrame implements Constants {
         if (board.isValidMove(selectedColumn)) {
             Timer timer = new Timer(ANIMATION_SPEED, new ActionListener() {
                 int currentRow = 0;
+
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (currentRow > 0) {
                         // Clearing previous row
-                        board.setValue(currentRow-1, selectedColumn, 0);
+                        board.setValue(currentRow - 1, selectedColumn, 0);
                         repaint();
                     }
                     if (currentRow < ROWS - 1 && board.getValue(currentRow + 1, selectedColumn) == 0) {
@@ -82,8 +83,10 @@ public class Connect4Gui extends JFrame implements Constants {
                         repaint();
                     } else {
                         ((Timer) e.getSource()).stop();
-                        board.setValue(currentRow, selectedColumn, socket.isServer() ? 1 : 2);
+                        var player = socket.isServer() ? 1 : 2;
+                        board.setValue(currentRow, selectedColumn, player);
                         repaint();
+                        waitingForPlayer(currentRow, selectedColumn, player);
                     }
                 }
             });
@@ -91,5 +94,33 @@ public class Connect4Gui extends JFrame implements Constants {
         } else {
             JOptionPane.showMessageDialog(this, "Invalid move, please select a different column", "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    public void waitingForPlayer(int row, int col, int player) {
+        try {
+            var message = String.format("Waiting for the player %d to move", player == 1 ? 2 : 1);
+            if (row != -1) {
+                socket.sendMessage(row, col, player);
+            }
+            var waitingDlg = new WaitingDialog(this, message);
+            SwingUtilities.invokeLater(waitingDlg::show);
+            Thread connectionThread = new Thread(() -> {
+                try {
+                    socket.receiveMessage(this.board);
+                    repaint();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Failed to established connection with player 2, please try again later", "Error", JOptionPane.ERROR_MESSAGE);
+                } finally {
+                    waitingDlg.hide();
+                }
+            });
+            connectionThread.start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            var message = String.format("Failed to send message to player %d", player);
+            JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
     }
 }
