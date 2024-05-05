@@ -1,25 +1,23 @@
 package com.connect4.ui;
 
+import com.connect4.Constants;
+import com.connect4.models.Board;
 import com.connect4.peer.ConnectFourSocket;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
-public class Connect4Gui extends JFrame {
-
-    private static final int ROWS = 6;
-    private static final int COLUMNS = 7;
-    private static final int CELL_SIZE = 100;
-    private static final Color BOARD_COLOR = Color.BLUE;
-    private static final Color EMPTY_COLOR = Color.WHITE;
-    private static final Color PLAYER1_COLOR = Color.RED;
-    private static final Color PLAYER2_COLOR = Color.YELLOW;
+public class Connect4Gui extends JFrame implements Constants {
+    private static final int ANIMATION_SPEED = 50; // Speed of the animation (lower is faster)
 
     private final ConnectFourSocket socket;
     private final StatusPanel statusPanel;
     private JPanel boardPanel;
-    private int[][] board = new int[ROWS][COLUMNS]; // 0: empty, 1: player 1, 2: player 2
+    private Board board = new Board();
+
 
     public Connect4Gui(ConnectFourSocket socket) throws IOException {
         super("Connect Four");
@@ -41,6 +39,7 @@ public class Connect4Gui extends JFrame {
             }
         };
         boardPanel.setPreferredSize(new Dimension(COLUMNS * CELL_SIZE, ROWS * CELL_SIZE));
+        boardPanel.addMouseListener(new BoardListener(this));
         add(boardPanel, BorderLayout.CENTER);
     }
 
@@ -57,14 +56,8 @@ public class Connect4Gui extends JFrame {
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLUMNS; col++) {
                 int x = col * CELL_SIZE;
-                int y = (ROWS - 1 - row) * CELL_SIZE; // Start drawing from the bottom
-                if (board[row][col] == 0) {
-                    g.setColor(EMPTY_COLOR);
-                } else if (board[row][col] == 1) {
-                    g.setColor(PLAYER1_COLOR);
-                } else {
-                    g.setColor(PLAYER2_COLOR);
-                }
+                int y = (row) * CELL_SIZE; // Start drawing from the bottom
+                g.setColor(board.getColor(row, col));
                 g.fillOval(x, y, CELL_SIZE, CELL_SIZE);
                 g.setColor(Color.BLACK);
                 g.drawOval(x, y, CELL_SIZE, CELL_SIZE);
@@ -72,4 +65,31 @@ public class Connect4Gui extends JFrame {
         }
     }
 
+    protected void dropPiece(final int selectedColumn) {
+        if (board.isValidMove(selectedColumn)) {
+            Timer timer = new Timer(ANIMATION_SPEED, new ActionListener() {
+                int currentRow = 0;
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (currentRow > 0) {
+                        // Clearing previous row
+                        board.setValue(currentRow-1, selectedColumn, 0);
+                        repaint();
+                    }
+                    if (currentRow < ROWS - 1 && board.getValue(currentRow + 1, selectedColumn) == 0) {
+                        board.setValue(currentRow, selectedColumn, socket.isServer() ? 1 : 2);
+                        currentRow++;
+                        repaint();
+                    } else {
+                        ((Timer) e.getSource()).stop();
+                        board.setValue(currentRow, selectedColumn, socket.isServer() ? 1 : 2);
+                        repaint();
+                    }
+                }
+            });
+            timer.start();
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid move, please select a different column", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }
