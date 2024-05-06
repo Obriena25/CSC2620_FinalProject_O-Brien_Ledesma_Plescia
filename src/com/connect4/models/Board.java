@@ -85,6 +85,9 @@ public class Board implements Constants {
 
         // No winner
         return 0;
+    }
 
+    public void resetBoard() {
+        this.board = new int[ROWS][COLUMNS];
     }
 }

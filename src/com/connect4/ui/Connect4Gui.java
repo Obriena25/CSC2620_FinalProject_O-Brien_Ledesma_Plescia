@@ -138,13 +138,30 @@ public class Connect4Gui extends JFrame implements Constants {
 
     public void showWinner(int row, int col, int player) {
         try {
-            var message = String.format("You have won, player %d", player);
+            var message = String.format("<html>You have won, player %d<br>Waiting for rematch</html>", player);
             var currentPlayer = socket.isServer() ? PLAYER1 : PLAYER2;
             if (currentPlayer == player) { // Send winning move
                 socket.sendMessage(row, col, player);
             }
             var waitingDlg = new WaitingDialog(this, message);
             SwingUtilities.invokeLater(waitingDlg::show);
+            Thread connectionThread = new Thread(() -> {
+                try {
+                    if (socket.receiveRematchConfirmation() == 'Y') {
+                        board.resetBoard();
+                        repaint();
+                    } else {
+                        System.exit(0);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Failed to established connection with player 2, please try again later", "Error", JOptionPane.ERROR_MESSAGE);
+                } finally {
+                    waitingDlg.hide();
+                }
+            });
+            connectionThread.start();
+
         } catch (Exception ex) {
             ex.printStackTrace();
             var message = String.format("Failed to send message to player %d", player);
@@ -156,9 +173,16 @@ public class Connect4Gui extends JFrame implements Constants {
     public void showLoser() {
         var currentPlayer = socket.isServer() ? PLAYER1 : PLAYER2;
         try {
-            var message = String.format("You have lost, player %d", currentPlayer);
-            var waitingDlg = new WaitingDialog(this, message);
-            SwingUtilities.invokeLater(waitingDlg::show);
+            var message = String.format("<html>You have lost, player %d<br>Want a rematch?<html>", currentPlayer);
+            int option = JOptionPane.showConfirmDialog(this, message, "Rematch Confirmation", JOptionPane.YES_NO_OPTION);
+            socket.sendRematchConfirmation(option == JOptionPane.YES_OPTION ? 'Y' : 'N');
+            if (option == JOptionPane.NO_OPTION) {
+                System.exit(0); // Close the program
+            } else {
+                board.resetBoard();
+                repaint();
+                waitingForPlayer(-1, -1, currentPlayer);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             var message = String.format("Failed to send message to player %d", currentPlayer);

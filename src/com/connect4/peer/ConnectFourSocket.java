@@ -68,6 +68,20 @@ public class ConnectFourSocket {
         var col = objectInputStream.readInt();
         var player = objectInputStream.readInt();
         boar.setValue(row, col, player);
-
     }
+
+    public void sendRematchConfirmation(Character answer) throws IOException {
+        var outputStream = this.peerSocket.getOutputStream();
+        var objectOutputStream = new ObjectOutputStream(outputStream);
+        objectOutputStream.writeChar(answer);
+        objectOutputStream.flush();
+    }
+
+    public Character receiveRematchConfirmation() throws IOException {
+        var inputStream = this.peerSocket.getInputStream();
+        var objectInputStream = new ObjectInputStream(inputStream);
+        return objectInputStream.readChar();
+    }
+
+
 }
