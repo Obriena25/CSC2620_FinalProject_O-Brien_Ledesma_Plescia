@@ -1,14 +1,24 @@
 package com.connect4.ui;
 
-import com.connect4.Constants;
-import com.connect4.models.Board;
-import com.connect4.peer.ConnectFourSocket;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+
+import com.connect4.Constants;
+import com.connect4.models.Board;
+import com.connect4.peer.ConnectFourSocket;
 
 public class Connect4Gui extends JFrame implements Constants {
     private static final int ANIMATION_SPEED = 50; // Speed of the animation (lower is faster)
@@ -17,6 +27,7 @@ public class Connect4Gui extends JFrame implements Constants {
     private final StatusPanel statusPanel;
     private JPanel boardPanel;
     private Board board = new Board();
+    private JButton[] columnButtons;
 
 
     public Connect4Gui(ConnectFourSocket socket) throws IOException {
@@ -28,8 +39,25 @@ public class Connect4Gui extends JFrame implements Constants {
         var status = socket.isServer() ? "Waiting for player 2" : "connecting to player 1";
         this.statusPanel = new StatusPanel(status);
         add(this.statusPanel, BorderLayout.SOUTH);
+    
+    // Create and add column buttons
+    JPanel buttonPanel = new JPanel(new GridLayout(1, COLUMNS));
+    columnButtons = new JButton[COLUMNS];
+    for (int i = 0; i < COLUMNS; i++) {
+        columnButtons[i] = new JButton(String.valueOf(i + 1));
+        int column = i;
+        columnButtons[i].addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dropPiece(column);
+            }
+        });
+        buttonPanel.add(columnButtons[i]);
+    
+    add(buttonPanel, BorderLayout.NORTH);
+    drawBoard(); // Add this line to initialize the board panel
+}
     }
-
     public void drawBoard() {
         boardPanel = new JPanel() {
             @Override
@@ -190,6 +218,4 @@ public class Connect4Gui extends JFrame implements Constants {
         }
 
     }
-
-
 }
