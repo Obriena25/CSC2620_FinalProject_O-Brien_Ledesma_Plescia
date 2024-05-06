@@ -6,7 +6,7 @@ public class Buttons extends JFrame {
     public static void main(String[] args) {
         GUIButtons guiButtons = new GUIButtons();
         guiButtons.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        guiButtons.setSize(10,10);
+        guiButtons.setSize(500,300);
         guiButtons.setVisible(true);
     }
 }
