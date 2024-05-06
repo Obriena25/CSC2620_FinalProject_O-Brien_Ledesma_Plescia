@@ -32,7 +32,7 @@ public class Application {
                     connectionThread.start();
                 } else {
                     gui.setStatus("Player 2 is ready");
-                    gui.waitingForPlayer(-1, -1, 2);
+                    gui.waitingForPlayer(-1, -1, Constants.PLAYER2);
                 }
                 gui.drawBoard();
             } catch (IOException e) {
