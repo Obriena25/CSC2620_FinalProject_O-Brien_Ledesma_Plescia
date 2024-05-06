@@ -18,8 +18,8 @@ public class Board implements Constants {
     public Board() {
     }
 
-    public boolean isValidMove(int colum) {
-        return board[0][colum] == 0;
+    public boolean isValidMove(int column) {
+        return board[0][column] == 0;
     }
 
 
