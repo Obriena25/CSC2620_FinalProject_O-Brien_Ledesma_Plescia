@@ -1,6 +1,6 @@
 package com.connect4;
 
-import java.awt.FlowLayout;
+//import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -24,20 +23,20 @@ public class GUIButtons extends JFrame {
     private final JTextArea textArea;
     private final JTextArea textArea1;
     private final JButton copyJButton;
-    private final JButton switchEditable;
+   // private final JButton switchEditable;
     private final JButton exitButton;
     private final JButton saveButton;
     private final JButton addNewTextAreaButton;
-    private ArrayList<JTextArea> areas = new ArrayList();
     private final JPanel buttonPanel = new JPanel(new GridLayout(1,1,1,1));
-    private JPanel extraTextAreasPanel = new JPanel(new FlowLayout());
+  //  private JPanel extraTextAreasPanel = new JPanel(new FlowLayout());
 
     public GUIButtons() {
-        super("JTextArea Buttom");
-        Box box = Box.createHorizontalBox();
-        String button = "This is the button string that \n"
-                + "will be copied from one text area to \n"
-                + "the other. \n";
+        super("ConnectFour Actions");
+        Box box = Box.createVerticalBox();
+        String button = "These are the button strings that \n"
+                + "will save the game \n"
+                + "will copy the game \n"
+                + "will exit the game \n";
 
         textArea = new JTextArea(button, 5, 5);
         box.add(new JScrollPane(textArea));
@@ -53,15 +52,15 @@ public class GUIButtons extends JFrame {
         });
 
 
-        switchEditable = new JButton(" Editable ");
-        buttonPanel.add(switchEditable);
-        switchEditable.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                textArea.setEditable(!textArea.isEditable());
-                textArea1.setEditable(!textArea1.isEditable());
-            }
-        });
+        // switchEditable = new JButton(" Editable ");
+        // buttonPanel.add(switchEditable);
+        // switchEditable.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         textArea.setEditable(!textArea.isEditable());
+        //         textArea1.setEditable(!textArea1.isEditable());
+        //     }
+        // });
 
         saveButton = new JButton("Save");
         buttonPanel.add(saveButton);
@@ -72,7 +71,7 @@ public class GUIButtons extends JFrame {
         addNewTextAreaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                extraTextAreasPanel.add(new JTextArea(5,5));
+            //    extraTextAreasPanel.add(new JTextArea(5,5));
                 validate();
             }
         });
@@ -86,11 +85,11 @@ public class GUIButtons extends JFrame {
         });
         box.add(buttonPanel);
 
-        textArea1 = new JTextArea("", 5, 5);
+        textArea1 = new JTextArea("", 1, 1);
         textArea1.setEditable(false);
         box.add(new JScrollPane(textArea1));
 
-        box.add(extraTextAreasPanel);
+      //  box.add(extraTextAreasPanel);
         this.add(box);
     }
 
@@ -126,4 +125,5 @@ public class GUIButtons extends JFrame {
             return textArea;
         return textArea1;
     }
+
 }
