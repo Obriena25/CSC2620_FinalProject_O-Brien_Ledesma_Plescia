@@ -33,7 +33,7 @@ public class Connect4Gui extends JFrame implements Constants {
     public Connect4Gui(ConnectFourSocket socket) throws IOException {
         super("Connect Four");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(COLUMNS * CELL_SIZE, (ROWS * CELL_SIZE) + 70);
+        setSize(COLUMNS * CELL_SIZE, (ROWS * CELL_SIZE) + 90);
         this.socket = socket;
 
         var status = socket.isServer() ? "Waiting for player 2" : "connecting to player 1";
