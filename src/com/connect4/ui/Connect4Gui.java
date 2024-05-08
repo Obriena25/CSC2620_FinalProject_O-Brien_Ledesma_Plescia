@@ -26,7 +26,6 @@ public class Connect4Gui extends JFrame implements Constants {
     private final ConnectFourSocket socket;
     private final StatusPanel statusPanel;
     private JPanel boardPanel;
-    private Board board = new Board();
     private JButton[] columnButtons;
 
 
@@ -39,25 +38,26 @@ public class Connect4Gui extends JFrame implements Constants {
         var status = socket.isServer() ? "Waiting for player 2" : "connecting to player 1";
         this.statusPanel = new StatusPanel(status);
         add(this.statusPanel, BorderLayout.SOUTH);
-    
-    // Create and add column buttons
-    JPanel buttonPanel = new JPanel(new GridLayout(1, COLUMNS));
-    columnButtons = new JButton[COLUMNS];
-    for (int i = 0; i < COLUMNS; i++) {
-        columnButtons[i] = new JButton(String.valueOf(i + 1));
-        int column = i;
-        columnButtons[i].addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dropPiece(column);
-            }
-        });
-        buttonPanel.add(columnButtons[i]);
-    
-    add(buttonPanel, BorderLayout.NORTH);
-    drawBoard(); // Add this line to initialize the board panel
-}
+
+        // Create and add column buttons
+        JPanel buttonPanel = new JPanel(new GridLayout(1, COLUMNS));
+        columnButtons = new JButton[COLUMNS];
+        for (int i = 0; i < COLUMNS; i++) {
+            columnButtons[i] = new JButton(String.valueOf(i + 1));
+            int column = i;
+            columnButtons[i].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    dropPiece(column);
+                }
+            });
+            buttonPanel.add(columnButtons[i]);
+
+            add(buttonPanel, BorderLayout.NORTH);
+            drawBoard(); // Add this line to initialize the board panel
+        }
     }
+
     public void drawBoard() {
         boardPanel = new JPanel() {
             @Override
@@ -85,7 +85,7 @@ public class Connect4Gui extends JFrame implements Constants {
             for (int col = 0; col < COLUMNS; col++) {
                 int x = col * CELL_SIZE;
                 int y = (row) * CELL_SIZE; // Start drawing from the bottom
-                g.setColor(board.getColor(row, col));
+                g.setColor(Board.getInstance().getColor(row, col));
                 g.fillOval(x, y, CELL_SIZE, CELL_SIZE);
                 g.setColor(Color.BLACK);
                 g.drawOval(x, y, CELL_SIZE, CELL_SIZE);
@@ -94,7 +94,7 @@ public class Connect4Gui extends JFrame implements Constants {
     }
 
     protected void dropPiece(final int selectedColumn) {
-        if (board.isValidMove(selectedColumn)) {
+        if (Board.getInstance().isValidMove(selectedColumn)) {
             Timer timer = new Timer(ANIMATION_SPEED, new ActionListener() {
                 int currentRow = 0;
 
@@ -103,20 +103,20 @@ public class Connect4Gui extends JFrame implements Constants {
                     if (currentRow > 0) {  // Animation
                         // System.out.println("1st condition");
                         // Clearing previous row
-                        board.setValue(currentRow - 1, selectedColumn, EMPTY);
+                        Board.getInstance().setValue(currentRow - 1, selectedColumn, EMPTY);
                         repaint();
                     }
                     var player = socket.isServer() ? PLAYER1 : PLAYER2;
-                    if (currentRow < ROWS - 1 && board.getValue(currentRow + 1, selectedColumn) == 0) { // Animation
+                    if (currentRow < ROWS - 1 && Board.getInstance().getValue(currentRow + 1, selectedColumn) == 0) { // Animation
                         // System.out.println("2nd condition");
-                        board.setValue(currentRow, selectedColumn, player);
+                        Board.getInstance().setValue(currentRow, selectedColumn, player);
                         currentRow++;
                         repaint();
                     } else {
                         ((Timer) e.getSource()).stop();
-                        board.setValue(currentRow, selectedColumn, player);
+                        Board.getInstance().setValue(currentRow, selectedColumn, player);
                         repaint();
-                        var winner = board.checkForWinner();
+                        var winner = Board.getInstance().checkForWinner();
                         if (winner != EMPTY) {
                             // send last messages
                             showWinner(currentRow, selectedColumn, player);
@@ -142,14 +142,14 @@ public class Connect4Gui extends JFrame implements Constants {
             SwingUtilities.invokeLater(waitingDlg::show);
             Thread connectionThread = new Thread(() -> {
                 try {
-                    socket.receiveMessage(this.board);
+                    socket.receiveMessage();
                     repaint();
                 } catch (IOException e) {
                     e.printStackTrace();
                     JOptionPane.showMessageDialog(this, "Failed to established connection with player 2, please try again later", "Error", JOptionPane.ERROR_MESSAGE);
                 } finally {
                     waitingDlg.hide();
-                    var winner = board.checkForWinner();
+                    var winner = Board.getInstance().checkForWinner();
                     if (winner != EMPTY) {
                         showLoser();
                     }
@@ -176,7 +176,7 @@ public class Connect4Gui extends JFrame implements Constants {
             Thread connectionThread = new Thread(() -> {
                 try {
                     if (socket.receiveRematchConfirmation() == 'Y') {
-                        board.resetBoard();
+                        Board.getInstance().resetBoard();
                         repaint();
                     } else {
                         System.exit(0);
@@ -207,7 +207,7 @@ public class Connect4Gui extends JFrame implements Constants {
             if (option == JOptionPane.NO_OPTION) {
                 System.exit(0); // Close the program
             } else {
-                board.resetBoard();
+                Board.getInstance().resetBoard();
                 repaint();
                 waitingForPlayer(-1, -1, currentPlayer);
             }

@@ -61,13 +61,13 @@ public class ConnectFourSocket {
         objectOutputStream.flush();
     }
 
-    public void receiveMessage(Board boar) throws IOException {
+    public void receiveMessage() throws IOException {
         var inputStream = this.peerSocket.getInputStream();
         var objectInputStream = new ObjectInputStream(inputStream);
         var row = objectInputStream.readInt();
         var col = objectInputStream.readInt();
         var player = objectInputStream.readInt();
-        boar.setValue(row, col, player);
+        Board.getInstance().setValue(row, col, player);
     }
 
     public void sendRematchConfirmation(Character answer) throws IOException {

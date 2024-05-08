@@ -12,12 +12,22 @@ import java.awt.*;
 public class Board implements Constants {
     private static final int CONNECT = 4;
 
+    // Singleton instance
+    private static Board singleton;
+
     private int[][] board = new int[ROWS][COLUMNS]; // 0: empty, 1: player 1, 2: player 2
 
     /**
      * Default construct, initialize a new game.
      */
-    public Board() {
+    private Board() {
+    }
+
+    public static synchronized  Board getInstance() {
+        if (singleton == null) {
+            singleton = new Board();
+        }
+        return singleton;
     }
 
     public boolean isValidMove(int column) {
